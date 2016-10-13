@@ -33,14 +33,14 @@ module.exports = function(grunt) {
 
 
     uglify: {
+      build: {
+        src: 'public/dist/built.js',
+        dest: 'public/dist/built.min.js'
+      }
     },
 
     eslint: {
       all: ['**/*.js', '!**/node_modules/**', '!public/lib/*.js']
-      // target: [
-      //   // Add list of files to lint here
-
-      // ]
     },
 
     cssmin: {
@@ -49,12 +49,18 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: [
-          'public/client/**/*.js',
-          'public/lib/**/*.js',
+          '**/*'
         ],
+        options: {
+          nospawn: true
+        },
         tasks: [
+          'clean',
+          'eslint',
+          'mochaTest',
           'concat',
-          'uglify'
+          'uglify',
+          'nodemon'
         ]
       },
       css: {
@@ -65,8 +71,9 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push live master'
       }
-    },
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -78,9 +85,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  // grunt.registerTask('server-dev', function (target) {
-  //   grunt.task.run([ 'nodemon', 'watch' ]);
-  // });
+  
+  grunt.registerTask('server-dev', function (target) {
+    grunt.task.run([ 'nodemon', 'watch' ]);
+  });
 
   ////////////////////////////////////////////////////
   // Main grunt tasks
@@ -96,7 +104,12 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-    // add your deploy tasks here
+
+  ]); 
+
+  grunt.registerTask('tester', [
+    'mochaTest',
+    'eslint'
   ]);
 
 
