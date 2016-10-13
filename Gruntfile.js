@@ -86,8 +86,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-contrib-clean');
   
-  grunt.registerTask('server-dev', function (target) {
-    grunt.task.run([ 'nodemon', 'watch' ]);
+  grunt.registerTask('deploy', function (target) {
+    grunt.task.run([
+      'clean',
+      'eslint',
+      'mochaTest',
+      'concat',
+      'uglify',
+      'shell:prodServer'
+    ]);
   });
 
   ////////////////////////////////////////////////////
@@ -104,13 +111,13 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-
-  ]); 
-
-  grunt.registerTask('tester', [
+    'clean',
+    'eslint',
     'mochaTest',
-    'eslint'
-  ]);
+    'concat',
+    'uglify',
+    'shell:prodServer'
+  ]); 
 
 
 };
